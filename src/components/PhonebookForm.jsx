@@ -12,12 +12,15 @@ class PhonebookForm extends Component {
     evt.preventDefault();
 
     const { onSubmit } = this.props;
-    onSubmit({ ...this.state });
-    this.reset();
+    const result = onSubmit({ ...this.state });
+    if (result) {
+      return this.reset();
+    }
+    return this.reset('', this.state.number);
   };
 
-  reset() {
-    this.setState({ name: '', number: '' });
+  reset(name = '', number = '') {
+    this.setState({ name: name, number: number });
   }
 
   handleInput = ({ target }) => {

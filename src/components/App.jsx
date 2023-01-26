@@ -8,18 +8,14 @@ import ContactsFilter from './ContactsFilter';
 
 class PhonebookClass extends Component {
   state = {
-    contacts: [
-      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
+    contacts: [],
     filter: '',
   };
 
   addNewContact = ({ name, number }) => {
     if (this.isDublicate(name)) {
-      return alert(`${name} is already in contacts`);
+      alert(`${name} is already in contacts`);
+      return false;
     }
     this.setState(prevState => {
       const { contacts } = prevState;
@@ -31,6 +27,7 @@ class PhonebookClass extends Component {
       };
       return { contacts: [newContact, ...contacts] };
     });
+    return true;
   };
 
   handleFilter = ({ target }) => {
@@ -67,6 +64,18 @@ class PhonebookClass extends Component {
       return { contacts: updateContacts };
     });
   };
+
+  componentDidUpdate(prevProps, prevState) {
+    const { contacts } = this.state;
+    if (prevState.contacts.length !== this.state.length) {
+      localStorage.setItem('my-contacts', JSON.stringify(contacts));
+    }
+  }
+
+  componentDidMount() {
+    const contacts = JSON.parse(localStorage.getItem('my-contacts'));
+    if (contacts?.length) this.setState({ contacts });
+  }
 
   render() {
     const { addNewContact, handleFilter, removeContact } = this;
