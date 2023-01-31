@@ -65,9 +65,9 @@ class PhonebookClass extends Component {
     });
   };
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(_, prevState) {
     const { contacts } = this.state;
-    if (prevState.contacts.length !== this.state.length) {
+    if (prevState.contacts !== contacts) {
       localStorage.setItem('my-contacts', JSON.stringify(contacts));
     }
   }
